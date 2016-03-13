@@ -1,22 +1,47 @@
-char = "subtype: B2"
-dna = "ORIGIN"
-number = 0
+from nltk.util import ngrams
 
+def deleteContent(pfile):
+	pfile.seek(0)
+	pfile.truncate()
+
+def dna_filter(virus):
+	dna = virus.split(mark, 1)[1].replace(" ", "").replace("\n", "")
+	dna_filtered = ''.join(i for i in dna if not i.isdigit())
+	return dna_filtered
+
+char = "subtype: B2"
+mark = "ORIGIN"
+number = 0
+n = 5
+m = 10
+
+# open file
 fyle = open("data/hbv-genotype-c.gb")
-fyler = open("data/result.gb", 'r+')
+dna = open("data/result.gb", 'w')
+features = open("data/features.gb", 'w')
+# delete file content before writing
+deleteContent(dna)
+deleteContent(features)
+# read file into string
 data = fyle.read()
-# fyler.write("DNA sequences of Hepatitis B Genotype B Subgenotype B2 \n")
+# split data into viruses
 viruses = data.split("//")
 
 for virus in viruses:
 	if char in virus:
 		number += 1
-		dna_string = virus.split(dna, 1)[1].replace(" ", "")
-		dna_string_filtered = ''.join(i for i in dna_string if not i.isdigit())
-		fyler.write(dna_string_filtered + '\n' + '//' + '\n')
+		# print DNA to result.gb
+		dna_string = dna_filter(virus)
+		dna.write(dna_string + '\n' + '//' + '\n')
+		# exact into features and print to features.gb
+		for N in range(n, m):
+			grams = ngrams(list(dna_string), N)
+			for gram in grams:
+				features.write(' '.join(str(s) for s in gram) + '\n')
 
-# fyler.write(str(number) + 'sequences\n')
+
 print(str(number) + 'sequences')
 
 fyle.close()
-fyler.close()
+dna.close()
+features.close()
