@@ -11,9 +11,10 @@ def dna_filter(virus):
 
 char = "subtype: B2"
 mark = "ORIGIN"
-number = 0
+# N-Grams range
 n = 5
 m = 10
+number = 0
 
 # open file
 fyle = open("data/hbv-genotype-c.gb")
@@ -24,23 +25,24 @@ deleteContent(dna)
 deleteContent(features)
 # read file into string
 data = fyle.read()
-# split data into viruses
-viruses = data.split("//")
+# split data into sequences
+sequences = data.split("//")
 
-for virus in viruses:
-	if char in virus:
+for sequence in sequences:
+	if char in sequence:
 		number += 1
 		# print DNA to result.gb
-		dna_string = dna_filter(virus)
+		dna_string = dna_filter(sequence)
 		dna.write(dna_string + '\n' + '//' + '\n')
 		# exact into features and print to features.gb
-		for N in range(n, m):
+		for N in range(n+1, m+1):
 			grams = ngrams(list(dna_string), N)
 			for gram in grams:
 				features.write(' '.join(str(s) for s in gram) + '\n')
+		features.write('//\n')
 
 
-print(str(number) + 'sequences')
+print(str(number) + ' sequences')
 
 fyle.close()
 dna.close()
