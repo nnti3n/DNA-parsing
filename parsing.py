@@ -19,10 +19,10 @@ number = 0
 # open file
 fyle = open("data/hbv-genotype-c.gb")
 dna = open("data/result.gb", 'w')
-features = open("data/features.gb", 'w')
+motifs = open("data/motifs.gb", 'w')
 # delete file content before writing
 deleteContent(dna)
-deleteContent(features)
+deleteContent(motifs)
 # read file into string
 data = fyle.read()
 # split data into sequences
@@ -34,16 +34,16 @@ for sequence in sequences:
 		# print DNA to result.gb
 		dna_string = dna_filter(sequence)
 		dna.write(dna_string + '\n' + '//' + '\n')
-		# exact into features and print to features.gb
+		# exact into motifs and print to motifs.gb
 		for N in range(n+1, m+1):
 			grams = ngrams(list(dna_string), N)
 			for gram in grams:
-				features.write(' '.join(str(s) for s in gram) + '\n')
-		features.write('//\n')
+				motifs.write(' '.join(str(s) for s in gram) + '\n')
+		motifs.write('//\n')
 
 
 print(str(number) + ' sequences')
 
 fyle.close()
 dna.close()
-features.close()
+motifs.close()
