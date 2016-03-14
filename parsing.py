@@ -4,13 +4,13 @@ def deleteContent(pfile):
 	pfile.seek(0)
 	pfile.truncate()
 
-def dna_filter(virus):
-	dna = virus.split(mark, 1)[1].replace(" ", "").replace("\n", "")
+def dna_filter(sequence):
+	dna = sequence.split(dna_mark, 1)[1].replace(" ", "").replace("\n", "")
 	dna_filtered = ''.join(i for i in dna if not i.isdigit())
 	return dna_filtered
 
 char = "subtype: B2"
-mark = "ORIGIN"
+dna_mark = "ORIGIN"
 # N-Grams range
 n = 5
 m = 10
@@ -31,14 +31,17 @@ sequences = data.split("//")
 for sequence in sequences:
 	if char in sequence:
 		number += 1
-		# print DNA to result.gb
+		# write DNA to result.gb
+		sequence_id = sequence.split()[1]
 		dna_string = dna_filter(sequence)
+		dna.write(sequence_id + '\n') # sequence id
 		dna.write(dna_string + '\n' + '//' + '\n')
-		# exact into motifs and print to motifs.gb
+		# exact into motifs and write to motifs.gb
+		motifs.write(sequence_id + '\n')
 		for N in range(n+1, m+1):
 			grams = ngrams(list(dna_string), N)
 			for gram in grams:
-				motifs.write(' '.join(str(s) for s in gram) + '\n')
+				motifs.write(''.join(str(s) for s in gram) + '\n')
 		motifs.write('//\n')
 
 
