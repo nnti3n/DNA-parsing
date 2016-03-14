@@ -11,6 +11,7 @@ def dna_filter(sequence):
 
 char = "subtype: B2"
 dna_mark = "ORIGIN"
+all_grams = []
 # N-Grams range
 n = 5
 m = 10
@@ -20,10 +21,11 @@ number = 0
 fyle = open("data/hbv-genotype-c.gb")
 dna = open("data/result.gb", 'w')
 motifs = open("data/motifs.gb", 'w')
+features = open("data/features.gb", 'w')
 # delete file content before writing
 deleteContent(dna)
 deleteContent(motifs)
-# read file into string
+# read file
 data = fyle.read()
 # split data into sequences
 sequences = data.split("//")
@@ -38,13 +40,21 @@ for sequence in sequences:
 		dna.write(dna_string + '\n' + '//' + '\n')
 		# exact into motifs and write to motifs.gb
 		motifs.write(sequence_id + '\n')
-		for N in range(n+1, m+1):
+		for N in range(n, m+1):
 			grams = ngrams(list(dna_string), N)
+			temp = []
 			for gram in grams:
+				# append tuple to temp
+				temp.append(gram)
 				motifs.write(''.join(str(s) for s in gram) + '\n')
+			# extend temp list to all_grams
+			all_grams.extend(temp)
 		motifs.write('//\n')
 
-
+# create distinct motifs (features)
+distinct_grams = set(all_grams)
+for gram in distinct_grams:
+	features.write(''.join(str(s) for s in gram) + '\n')
 print(str(number) + ' sequences')
 
 fyle.close()
