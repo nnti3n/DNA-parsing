@@ -13,8 +13,8 @@ char = "subtype: B2"
 dna_mark = "ORIGIN"
 all_grams = []
 # N-Grams range
-n = 5
-m = 10
+n = 10
+m = 30
 number = 0
 
 # open file
@@ -36,7 +36,7 @@ for sequence in sequences:
 		# write DNA to result.gb
 		sequence_id = sequence.split()[1]
 		dna_string = dna_filter(sequence)
-		dna.write(sequence_id + '\n') # sequence id
+		dna.write(">" + sequence_id + '\n') # sequence id
 		dna.write(dna_string + '\n' + '//' + '\n')
 		# exact into motifs and write to motifs.gb
 		motifs.write(sequence_id + '\n')
