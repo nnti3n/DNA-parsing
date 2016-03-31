@@ -1,4 +1,5 @@
 from nltk.util import ngrams
+import sys, getopt
 
 def deleteContent(pfile):
 	pfile.seek(0)
@@ -9,54 +10,98 @@ def dna_filter(sequence):
 	dna_filtered = ''.join(i for i in dna if not i.isdigit())
 	return dna_filtered
 
-char = "subtype: B2"
 dna_mark = "ORIGIN"
-all_grams = []
-# N-Grams range
-n = 10
-m = 30
-number = 0
 
-# open file
-fyle = open("data/hbv-genotype-c.gb")
-dna = open("data/result.gb", 'w')
-motifs = open("data/motifs.gb", 'w')
-features = open("data/features.gb", 'w')
-# delete file content before writing
-deleteContent(dna)
-deleteContent(motifs)
-# read file
-data = fyle.read()
-# split data into sequences
-sequences = data.split("//")
+def main(argv):
+	inputfile = ''
+	char = ''
+	dna_file = ''
+	motifs_file = ''
+	features_file = ''
+	n = 0
+	m = 0
+	try:
+		opts, args = getopt.getopt(argv,"hi:o:",["ifile=","char=","dna=","motifs=","features=","min=","max="])
+	except getopt.GetoptError as e:
+		print('parsing.py -i <inputfile> -c <char> -d <dna> -mo <motifs> -f <features> -min <min> -max <max>')
+		print(e)
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt == '-h':
+			print('parsing.py -i <inputfile> -c <char> -d <dna> -mo <motifs> -f <features> -min <min> -max <max>')
+			sys.exit()
+		elif opt in ("-i", "--ifile"):
+			inputfile = arg
+		elif opt in ("-c", "--char"):
+			char = arg
+		elif opt in ("-d", "--dna"):
+			dna_file = arg
+		elif opt in ("-mo", "--motifs"):
+			motifs_file = arg
+		elif opt in ("-f", "--features"):
+			features_file = arg
+		elif opt in ("-min", "--min"):
+			# N-Grams min range
+			n = int(arg)
+		elif opt in ("-max", "--max"):
+			# N-Grams max range
+			m = int(arg)
 
-for sequence in sequences:
-	if char in sequence:
-		number += 1
-		# write DNA to result.gb
-		sequence_id = sequence.split()[1]
-		dna_string = dna_filter(sequence)
-		dna.write(">" + sequence_id + '\n') # sequence id
-		dna.write(dna_string + '\n' + '//' + '\n')
-		# exact into motifs and write to motifs.gb
-		motifs.write(sequence_id + '\n')
-		for N in range(n, m+1):
-			grams = ngrams(list(dna_string), N)
-			temp = []
-			for gram in grams:
-				# append tuple to temp
-				temp.append(gram)
-				motifs.write(''.join(str(s) for s in gram) + '\n')
-			# extend temp list to all_grams
-			all_grams.extend(temp)
-		motifs.write('//\n')
+	print ('Input file is ', inputfile)
+	print ('DNA file is ', dna_file)
+	print ('char is ', char)
+	print ('Motifs file is ', motifs_file)
+	print ('Features file is ', features_file)
+	print ('N-gram min length ', n)
+	print ('N-gram max length ', m) 
 
-# create distinct motifs (features)
-distinct_grams = set(all_grams)
-for gram in distinct_grams:
-	features.write(''.join(str(s) for s in gram) + '\n')
-print(str(number) + ' sequences')
+	all_grams = []
+	number = 0
 
-fyle.close()
-dna.close()
-motifs.close()
+	# open file
+	fyle = open(inputfile)
+	dna = open(dna_file, 'w')
+	motifs = open(motifs_file, 'w')
+	features = open(features_file, 'w')
+	# delete file content before writing
+	deleteContent(dna)
+	deleteContent(motifs)
+	# read file
+	data = fyle.read()
+	# split data into sequences
+	sequences = data.split("//")
+
+	for sequence in sequences:
+		if len(sequence) > 3000 and char in sequence:
+			number += 1
+			# write DNA to result.gb
+			sequence_id = sequence.split()[1]
+			dna_string = dna_filter(sequence)
+			dna.write(">" + sequence_id + '\n') # sequence id
+			dna.write(dna_string + '\n' + '//' + '\n')
+			# exact into motifs and write to motifs.gb
+			motifs.write(sequence_id + '\n')
+			for N in range(n, m+1):
+				grams = ngrams(list(dna_string), N)
+				temp = []
+				for gram in grams:
+					# append tuple to temp
+					temp.append(gram)
+					motifs.write(''.join(str(s) for s in gram) + '\n')
+				# extend temp list to all_grams
+				all_grams.extend(temp)
+			motifs.write('//\n')
+
+	# create distinct motifs (features)
+	distinct_grams = set(all_grams)
+	for gram in distinct_grams:
+		features.write(''.join(str(s) for s in gram) + '\n')
+	print(str(number) + ' sequences')
+
+	fyle.close()
+	dna.close()
+	motifs.close()
+	features.close()
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
