@@ -28,7 +28,7 @@ def main(argv):
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-			print('parsing.py -i <inputfile> -c <char> -d <dna> -mo <motifs> -f <features> -min <min> -max <max>')
+			print('parsing.py -i <inputfile> -c <char> -d <dna> -m <motifs> -f <features> -min <min> -max <max>')
 			sys.exit()
 		elif opt in ("-i", "--ifile"):
 			inputfile = arg
@@ -36,14 +36,14 @@ def main(argv):
 			char = arg
 		elif opt in ("-d", "--dna"):
 			dna_file = arg
-		elif opt in ("-mo", "--motifs"):
+		elif opt in ("-m", "--motifs"):
 			motifs_file = arg
 		elif opt in ("-f", "--features"):
 			features_file = arg
-		elif opt in ("-min", "--min"):
+		elif opt in ("--min"):
 			# N-Grams min range
 			n = int(arg)
-		elif opt in ("-max", "--max"):
+		elif opt in ("--max"):
 			# N-Grams max range
 			m = int(arg)
 
