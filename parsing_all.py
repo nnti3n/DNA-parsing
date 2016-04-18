@@ -10,16 +10,12 @@ def dna_filter(sequence):
 	dna_filtered = ''.join(i for i in dna if not i.isdigit())
 	return dna_filtered
 
-def get_grams(sequence):
-
-
 dna_mark = "ORIGIN"
 
 def main(argv):
 	inputfile = ''
-	char = ''
+	# char = ''
 	dna_file = ''
-	motifs_file = ''
 	features_file = ''
 	n = 0
 	m = 0
@@ -31,16 +27,14 @@ def main(argv):
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-			print('parsing.py -i <inputfile> -c <char> -d <dna> -m <motifs> -f <features> -min <min> -max <max>')
+			print('parsing.py -i <inputfile> -c <char> -d <dna> -f <features> -min <min> -max <max>')
 			sys.exit()
 		elif opt in ("-i", "--ifile"):
 			inputfile = arg
-		elif opt in ("-c", "--char"):
-			char = arg
+		# elif opt in ("-c", "--char"):
+		# 	char = arg
 		elif opt in ("-d", "--dna"):
 			dna_file = arg
-		elif opt in ("-m", "--motifs"):
-			motifs_file = arg
 		elif opt in ("-f", "--features"):
 			features_file = arg
 		elif opt in ("--min"):
@@ -52,87 +46,91 @@ def main(argv):
 
 	print ('Input file is ', inputfile)
 	print ('DNA file is ', dna_file)
-	print ('char is ', char)
-	print ('Motifs file is ', motifs_file)
+	# print ('char is ', char)
 	print ('Features file is ', features_file)
 	print ('N-gram min length ', n)
 	print ('N-gram max length ', m) 
 
 	all_grams = []
 	temp_dna = []
+	chars = ["subtype: A1", "subtype: B1", "subtype: B2", "subtype: C1", "subtype: C2",
+	"subtype: C4", "subtype: F1", "subtype: D1", "subtype: D2", "subtype: D3",
+	"subtype: D4", "subtype: D5", "subtype: F1", "subtype: F4", "genotype: A1", 
+	"genotype: B1", "genotype: B2", "genotype: C1", "genotype: C2",
+	"genotype: C4", "genotype: F1", "genotype: D1", "genotype: D2",
+	"genotype: D3", "genotype: D4", "genotype: D5", "genotype: F1", 
+	"genotype: F4"]
+	# number of seq counter
 	number = 0
 
 	# open file
 	fyle = open(inputfile)
 	dna = open(dna_file, 'w')
-	motifs = open(motifs_file, 'w')
 	features = open(features_file, 'w')
 	# delete file content before writing
 	deleteContent(dna)
-	deleteContent(motifs)
 	# read file
 	data = fyle.read()
 	# split data into sequences
 	sequences = data.split("//")
 
 	for sequence in sequences:
-		if len(sequence) > 3000 and char in sequence:
-			number += 1
+		if len(sequence) > 3000 and any(char in sequence for char in chars):
 			# write DNA to result.gb
-			sequence_id = sequence.split()[1]
-			dna_string = dna_filter(sequence)
-			if 'n' in dna_string:
+			if sequence.split()[0] == 'LOCUS':
+				number += 1
+				sequence_id = sequence.split()[1]
+				dna_string = dna_filter(sequence)
+				if 'n' in dna_string:
+					number -= 1
+					continue
+			else:
 				continue
 			temp_dna.append(dna_string)
 			dna.write(">" + sequence_id + '\n') # sequence id
 			dna.write(dna_string + '\n' + '//' + '\n')
 			# exact into motifs and write to motifs.gb
-			motifs.write(sequence_id + '\n')
 			for N in range(n, m+1):
 				grams = ngrams(list(dna_string), N)
-				temp = []
+				# temp = []
 				for gram in grams:
 					# append tuple to temp array cuz ngram output tuple type
-					temp.append(gram)
-					# motifs.write(''.join(str(s) for s in gram) + '\n')
-				# extend temp list to all_grams
-				all_grams.extend(temp)
+					# append keep the tuple in group of tuples
+					# temp.append(gram)
+					features.write(''.join(str(s) for s in gram) + '\n')
+				# extend temp list to an array of tuple (all_grams)
+				# all_grams.extend(temp)
 			# motifs.write('//\n')
+			print(number)
 
 	# create distinct motifs (features)
-	distinct_grams = set(all_grams)
-	# most_grams = np.argpartition(all_grams, 200)
+	# distinct_grams = set(all_grams)
 
+	# count_dna = 0
+	# motifs_most = []
+	# print(len(temp_dna)/3)
+	# # 70% occurence
 	# for gram in distinct_grams:
-	# 	features.write(''.join(str(s) for s in gram) + '\n')
-	# print(str(number) + ' sequences')
+	# 	count_dna = 0
+	# 	str_gram = ''.join(gram)
+	# 	for dna_s in temp_dna:
+	# 		if str_gram in str(dna_s):
+	# 			count_dna += 1
+	# 			if count_dna > len(temp_dna)*7/10:
+	# 				motifs_most.append(str_gram)
+	# 				break
+	# 	if len(motifs_most) >= 500:
+	# 		break
 
-	count_dna = 0
-	motifs_most = []
-	print(len(temp_dna)/3)
-	# 70% occurence
-	for gram in distinct_grams:
-		count_dna = 0
-		str_gram = ''.join(gram)
-		for dna_s in temp_dna:
-			if str_gram in str(dna_s):
-				count_dna += 1
-				if count_dna > len(temp_dna)*7/10:
-					motifs_most.append(str_gram)
-					break
-		if len(motifs_most) >= 200:
-			break
-
-	for gram in motifs_most:
-		features.write(gram + '\n')
+	# for gram in motifs_most:
+	# 	features.write(gram + '\n')
 
 	# in the end print the number of sequence and gram 
 	print(str(number) + ' sequences')
-	print(str(len(motifs_most)) + 'features')
+	# print(str(len(motifs_most)) + 'features')
 
 	fyle.close()
 	dna.close()
-	motifs.close()
 	features.close()
 
 if __name__ == "__main__":
