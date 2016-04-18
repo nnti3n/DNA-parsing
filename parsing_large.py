@@ -22,12 +22,12 @@ def main(argv):
 	try:
 		opts, args = getopt.getopt(argv,"hi:o:",["input=","output="])
 	except getopt.GetoptError as e:
-		print('parsing.py -i <inputfile> -max <max>')
+		print('parsing.py -i <inputfile> -m <max> -o <output>')
 		print(e)
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-			print('parsing_lage.py -i <inputfile> -m <max>')
+			print('parsing_lage.py -i <inputfile> -m <max> -o <output>')
 			sys.exit()
 		elif opt in ("-i", "--input"):
 			inputfile = arg
@@ -37,7 +37,7 @@ def main(argv):
 			outputfile = arg
 
 	print ('Input file is ', inputfile)
-	print ('Output file ', outputfile) 
+	print ('Output file ', outputfile)
 
 	# time
 	start_time = time.time()
@@ -60,7 +60,7 @@ def main(argv):
 			number += 1
 			if motif in total:
 				continue
-			for lines in read_in_chunks(inputfile, 1000000):
+			for lines in read_in_chunks(inputfile, 10000):
 				for line in lines:
 					if line == motif:
 						occur += 1

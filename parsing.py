@@ -1,4 +1,5 @@
 from nltk.util import ngrams
+import numpy as np
 import sys, getopt
 
 def deleteContent(pfile):
@@ -56,6 +57,7 @@ def main(argv):
 	print ('N-gram max length ', m) 
 
 	all_grams = []
+	temp_dna = []
 	number = 0
 
 	# open file
@@ -77,6 +79,9 @@ def main(argv):
 			# write DNA to result.gb
 			sequence_id = sequence.split()[1]
 			dna_string = dna_filter(sequence)
+			if 'n' in dna_string:
+				continue
+			temp_dna.append(dna_string)
 			dna.write(">" + sequence_id + '\n') # sequence id
 			dna.write(dna_string + '\n' + '//' + '\n')
 			# exact into motifs and write to motifs.gb
@@ -85,7 +90,7 @@ def main(argv):
 				grams = ngrams(list(dna_string), N)
 				temp = []
 				for gram in grams:
-					# append tuple to temp
+					# append tuple to temp array cuz ngram output tuple type
 					temp.append(gram)
 					motifs.write(''.join(str(s) for s in gram) + '\n')
 				# extend temp list to all_grams
@@ -94,9 +99,34 @@ def main(argv):
 
 	# create distinct motifs (features)
 	distinct_grams = set(all_grams)
-	for gram in distinct_grams:
-		features.write(''.join(str(s) for s in gram) + '\n')
+	most_grams = np.argpartition(all_grams, 200)
+
+	# for gram in distinct_grams:
+	# 	features.write(''.join(str(s) for s in gram) + '\n')
+	# print(str(number) + ' sequences')
+
+	count_dna = 0
+	motifs_most = []
+	print(len(temp_dna)/3)
+	# 70% occurence
+	for gram in distinct_grams:j
+		count_dna = 0
+		str_gram = ''.join(gram)
+		for dna_s in temp_dna:
+			if str_gram in str(dna_s):
+				count_dna += 1
+				if count_dna > len(temp_dna)*7/10:
+					motifs_most.append(str_gram)
+					break
+		if len(motifs_most) >= 200:
+			break
+
+	for gram in motifs_most:
+		features.write(gram + '\n')
+
+	# in the end print the number of sequence and gram 
 	print(str(number) + ' sequences')
+	print(str(len(motifs_most)) + 'features')
 
 	fyle.close()
 	dna.close()
