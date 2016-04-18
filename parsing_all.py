@@ -53,13 +53,16 @@ def main(argv):
 
 	all_grams = []
 	temp_dna = []
-	chars = ["subtype: A1", "subtype: B1", "subtype: B2", "subtype: C1", "subtype: C2",
+	chars = ["subtype: A1", "subtype: A2", "subtype: A5", "subtype: B1", "subtype: B2", "subtype: C1", "subtype: C2",
 	"subtype: C4", "subtype: F1", "subtype: D1", "subtype: D2", "subtype: D3",
-	"subtype: D4", "subtype: D5", "subtype: F1", "subtype: F4", "genotype: A1", 
-	"genotype: B1", "genotype: B2", "genotype: C1", "genotype: C2",
-	"genotype: C4", "genotype: F1", "genotype: D1", "genotype: D2",
+	"subtype: D4", "subtype: D5", "subtype: F1", "subtype: F4", "genotype: A1", "genotype: A2",
+	"genotype: A5", "genotype: B1", "genotype: B2", "genotype: C1", "genotype: C2",
+	"genotype: C4", "genotype: D1", "genotype: D2",
 	"genotype: D3", "genotype: D4", "genotype: D5", "genotype: F1", 
-	"genotype: F4"]
+	"genotype: F4", "genotype A1;", "genotype A2;", "genotype A5;", "genotype B1;", 
+	"genotype B2;", "genotype C1;", "genotype C2;",
+	"genotype C4;", "genotype D1;", "genotype D2;", "genotype D3;",
+	"genotype D4;", "genotype D5;", "genotype F1;", "genotype F4;"]
 	# number of seq counter
 	number = 0
 
