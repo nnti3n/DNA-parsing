@@ -45,7 +45,8 @@ def main(argv):
 	features = features_data.split()
 
 	rates = []
-	# each sequence
+	number = 0
+	# each sequencegenotype: C1
 	for motifs_set in motifs_set_all:
 		if motifs_set != '':
 			motifs = motifs_set.split()
@@ -54,6 +55,8 @@ def main(argv):
 				rate = motifs.count(feature)
 				rates.append(feature + " " + str(rate) + '\n')
 			rates.append('//\n')
+			number += 1
+			print(number)
 
 	for line in rates:
 		vector_file.write(line)

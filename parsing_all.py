@@ -92,6 +92,7 @@ def main(argv):
 			temp_dna.append(dna_string)
 			dna.write(">" + sequence_id + '\n') # sequence id
 			dna.write(dna_string + '\n' + '//' + '\n')
+			features.write(">" + sequence_id + '\n')
 			# exact into motifs and write to motifs.gb
 			for N in range(n, m+1):
 				grams = ngrams(list(dna_string), N)
@@ -104,6 +105,7 @@ def main(argv):
 				# extend temp list to an array of tuple (all_grams)
 				# all_grams.extend(temp)
 			# motifs.write('//\n')
+			features.write('//' + '\n')
 			print(number)
 
 	# create distinct motifs (features)
