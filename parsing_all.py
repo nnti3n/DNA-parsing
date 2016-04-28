@@ -10,6 +10,62 @@ def dna_filter(sequence):
 	dna_filtered = ''.join(i for i in dna if not i.isdigit())
 	return dna_filtered
 
+def f(x):
+    return {
+        'subtype: A1': 'A1',
+        'subtype: A2': 'A2',
+        'subtype: A5': 'A5',
+        'subtype: B1': 'B1',
+        'subtype: B2': 'B2',
+        'subtype: C1': 'C1',
+        'subtype: C2': 'C2',
+        'subtype: C4': 'C4',
+        'subtype: D1': 'D1',
+        'subtype: D2': 'D2',
+        'subtype: D3': 'D3',
+        'subtype: D4': 'D4',
+        'subtype: D5': 'D5',
+        'subtype: F1': 'F1',
+        'subtype: F4': 'F4',
+        'genotype: A1': 'A1',
+        'genotype: A2': 'A2',
+        'genotype: A5': 'A5',
+        'genotype: B1': 'B1',
+        'genotype: B2': 'B2',
+        'genotype: C1': 'C1',
+        'genotype: C2': 'C2',
+        'genotype: C4': 'C4',
+        'genotype: D1': 'D1',
+        'genotype: D2': 'D2',
+        'genotype: D3': 'D3',
+        'genotype: D4': 'D4',
+        'genotype: D5': 'D5',
+        'genotype: F1': 'F1',
+        'genotype: F4': 'F4',
+        'genotype A1;': 'A1',
+        'genotype A2;': 'A2',
+        'genotype A5;': 'A5',
+        'genotype B1;': 'B1',
+        'genotype B2;': 'B2',
+        'genotype C1;': 'C1',
+        'genotype C2;': 'C2',
+        'genotype C4;': 'C4',
+        'genotype D1;': 'D1',
+        'genotype D2;': 'D2',
+        'genotype D3;': 'D3',
+        'genotype D4;': 'D4',
+        'genotype D5;': 'D5',
+        'genotype F1;': 'F1',
+        'genotype F4;': 'F4',
+    }.get(x)
+
+def subtype(sequence, chars):
+	for char in chars:
+		if char in sequence:
+			return f(char)
+	return False
+
+
 dna_mark = "ORIGIN"
 
 def main(argv):
@@ -78,20 +134,22 @@ def main(argv):
 	sequences = data.split("//")
 
 	for sequence in sequences:
-		if len(sequence) > 3000 and any(char in sequence for char in chars):
+		subtype_string = subtype(sequence, chars)
+		if len(sequence) > 3000 and subtype_string:
 			# write DNA to result.gb
 			if sequence.split()[0] == 'LOCUS':
-				number += 1
 				sequence_id = sequence.split()[1]
 				dna_string = dna_filter(sequence)
 				if 'n' in dna_string:
-					number -= 1
 					continue
+				number += 1
 			else:
 				continue
 			temp_dna.append(dna_string)
 			dna.write(">" + sequence_id + '\n') # sequence id
-			dna.write(dna_string + '\n' + '//' + '\n')
+			dna.write(subtype_string + '\n')
+			# dna.write(dna_string + '\n' + '//' + '\n')
+			dna.write('//\n')
 			features.write(">" + sequence_id + '\n')
 			# exact into motifs and write to motifs.gb
 			for N in range(n, m+1):

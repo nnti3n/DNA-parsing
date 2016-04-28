@@ -49,10 +49,13 @@ def main(argv):
 	# each sequencegenotype: C1
 	for motifs_set in motifs_set_all:
 		if motifs_set != '':
-			motifs = motifs_set.split()
-			rates.append(">" + motifs[0] + '\n')
+			motifs = motifs_set.split('\n')
+			rates.append(motifs[0] + '\n')
 			for feature in features:
+				# print(motifs)
+				# print(feature)
 				rate = motifs.count(feature)
+				# print(rate)
 				rates.append(feature + " " + str(rate) + '\n')
 			rates.append('//\n')
 			number += 1
