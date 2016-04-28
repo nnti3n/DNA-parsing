@@ -41,7 +41,7 @@ def main(argv):
 	features_data = features_file.read()
 	# data -> list of motifs
 	motifs_data = motifs_data.strip()
-	motifs_set_all = motifs_data.split('//')
+	motifs_set_all = motifs_data.split('//\n')
 	features = features_data.split()
 
 	rates = []
@@ -50,6 +50,7 @@ def main(argv):
 	for motifs_set in motifs_set_all:
 		if motifs_set != '':
 			motifs = motifs_set.split('\n')
+			print(motifs[0])
 			rates.append(motifs[0] + '\n')
 			for feature in features:
 				# print(motifs)
