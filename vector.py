@@ -50,7 +50,7 @@ def main(argv):
 	for motifs_set in motifs_set_all:
 		if motifs_set != '':
 			motifs = motifs_set.split('\n')
-			print(motifs[0])
+			# print(motifs[0])
 			rates.append(motifs[0] + '\n')
 			for feature in features:
 				# print(motifs)
