@@ -42,7 +42,12 @@ def main(argv):
 	# data -> list of motifs
 	motifs_data = motifs_data.strip()
 	motifs_set_all = motifs_data.split('//\n')
-	features = features_data.split()
+	features_most = features_data.split()
+
+	for feature in features_most:
+		for f in features_most:
+			if feature != f and feature in f:
+				features_most.remove(feature) 
 
 	rates = []
 	number = 0
@@ -52,7 +57,7 @@ def main(argv):
 			motifs = motifs_set.split('\n')
 			# print(motifs[0])
 			rates.append(motifs[0] + '\n')
-			for feature in features:
+			for feature in features_most:
 				# print(motifs)
 				# print(feature)
 				rate = motifs.count(feature)
