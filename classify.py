@@ -8,9 +8,10 @@ import scipy as sp
 import numpy as np
 
 # load the iris datasets
-dataset = loadarff(open('data/vector_output/hbv_80_7class_long.arff', 'r'))
+url = 'data/vector_output/hbv_75_2.arff'
+dataset = loadarff(open(url, 'r'))
 target = np.array(dataset[0]['class'])
-data, meta = loadarff(open('data/vector_output/hbv_80_7class_long.arff', 'r'))
+data, meta = loadarff(open(url, 'r'))
 train = np.array(data)
 
 # filter

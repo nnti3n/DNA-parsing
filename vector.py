@@ -10,14 +10,14 @@ def main(argv):
 	ft = ''
 	vt = ''
 	try:
-		opts, args = getopt.getopt(argv,"hm:f:v:",["motifs=","features=","vector="])
+		opts, args = getopt.getopt(argv,"hm:f:v:",["motifs=","features=","vector=","number"])
 	except getopt.GetoptError as e:
-		print('vector.py -m <motifs_file> -f <features_file> -v <vector_file>')
+		print('vector.py -m <motifs_file> -f <features_file> -v <vector_file> -n <number>')
 		print(e)
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-			print('vector.py -m <motifs_file> -f <features_file> -v <vector_file>')
+			print('vector.py -m <motifs_file> -f <features_file> -v <vector_file> -n <number>')
 			sys.exit()
 		elif opt in ("-m", "--motifs"):
 			mt = arg
@@ -25,9 +25,12 @@ def main(argv):
 			ft = arg
 		elif opt in ("-v", "--vector"):
 			vt = arg
+		# elif opt in ("-n", "--number"):
+		# 	n = int(arg)
 	print('Motifs file is "', mt)
 	print('Features file is "', ft)
 	print('Vector file is "', vt)
+	# print('Number of features "', n)
 
 	start_time = time.time()
 
@@ -44,10 +47,7 @@ def main(argv):
 	motifs_set_all = motifs_data.split('//\n')
 	features_most = features_data.split()
 
-	for feature in features_most:
-		for f in features_most:
-			if feature != f and feature in f:
-				features_most.remove(feature) 
+	# features_most = features_most[:n]
 
 	rates = []
 	number = 0

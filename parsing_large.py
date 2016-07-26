@@ -42,7 +42,7 @@ def main(argv):
 	print ('Input file is ', inputfile)
 	print ('Output file ', outputfile)
 	# print ('Features file ', featuresfile)
-	print ('max features ', m)
+	# print ('max features ', m)
 
 	# time
 	start_time = time.time()
@@ -77,7 +77,7 @@ def main(argv):
 	# 		output.write(motif.replace(" ", "").replace("\n", "") + " " + str(occur-1) + "\n")
 	# 		total.append(motif)
 
-	data = fyle.read();
+	data = fyle.read()
 	motifs = Counter(data.split());
 	print(len(motifs))
 
@@ -108,16 +108,16 @@ def main(argv):
 	# for gram in motifs_most:
 	# 	features.write(gram + '\n')
 
-	for key, value in motifs.most_common(int(m)):
+	for key, value in motifs.most_common():
 		number += 1
 		# output.write(key + " " + str(value) + "\n")
 		output.write(key + "\n")
 		# features.write(key + "\n")
-		print(number)
+		# print(number)
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 
-	# print(number)
+	print(number)
 
 	fyle.close()
 	output.close()

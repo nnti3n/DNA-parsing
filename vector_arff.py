@@ -12,18 +12,18 @@ def main(argv):
 	try:
 		opts, args = getopt.getopt(argv,"hv:d:a:",["vector=","arff="])
 	except getopt.GetoptError as e:
-		print('vector.py -v <vector_file> -a <arff>')
+		print('vector.py -v <vector_file> -d <dna file> -a <arff>')
 		print(e)
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-			print('vector.py -v <vector_file> -a <arff>')
+			print('vector.py -v <vector_file> -d <dna file> -a <arff>')
 			sys.exit()
-		elif opt in ("-a", "--vector"):
+		elif opt in ("-a", "--arff"):
 			ar = arg
 		elif opt in ("-d", "--data"):
 			dt = arg
-		elif opt in ("-v", "--arff"):
+		elif opt in ("-v", "--vector"):
 			vt = arg
 	print('Vector file is "', vt)
 	print('subgenotype "', dt)
@@ -51,7 +51,7 @@ def main(argv):
 			motifs = motifs_set.split()
 			arff_file.write('@ATTRIBUTE ' + motifs[0].replace(">","") + ' NUMERIC\n')
 
-	arff_file.write('@ATTRIBUTE class {A1, A2, A5, B1, B2, C1, C2, C4, D1, D2, D3, D4, D5, F1, F4}\n\n')
+	arff_file.write('@ATTRIBUTE class {A1, A2, B2, C1, C2, D1, F1}\n\n')
 	
 	# data
 	arff_file.write('@data\n')

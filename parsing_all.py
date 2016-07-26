@@ -74,16 +74,15 @@ def main(argv):
 	dna_file = ''
 	features_file = ''
 	n = 0
-	m = 0
 	try:
-		opts, args = getopt.getopt(argv,"hi:o:",["ifile=","char=","dna=","motifs=","features=","min=","max="])
+		opts, args = getopt.getopt(argv,"hi:d:f:n:m:",["ifile=","char=","dna=","features=","ngram","max"])
 	except getopt.GetoptError as e:
-		print('parsing.py -i <inputfile> -c <char> -d <dna> -mo <motifs> -f <features> -min <min> -max <max>')
+		print('parsing.py -i <inputfile> -d <dna> -m <motifs> -f <features> -n <min> -m <max>')
 		print(e)
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-			print('parsing.py -i <inputfile> -c <char> -d <dna> -f <features> -min <min> -max <max>')
+			print('parsing.py -i <inputfile> -d <dna> -f <features> -n <ngram> -m <max>')
 			sys.exit()
 		elif opt in ("-i", "--ifile"):
 			inputfile = arg
@@ -93,11 +92,11 @@ def main(argv):
 			dna_file = arg
 		elif opt in ("-f", "--features"):
 			features_file = arg
-		elif opt in ("--min"):
+		elif opt in ("-n", "--ngram"):
 			# N-Grams min range
 			n = int(arg)
-		elif opt in ("--max"):
-			# N-Grams max range
+		elif opt in ("-m", "--max"):
+			# N-Grams min range
 			m = int(arg)
 
 	print ('Input file is ', inputfile)
@@ -161,27 +160,6 @@ def main(argv):
 			features.write('//' + '\n')
 			print(number)
 
-	# create distinct motifs (features)
-	# distinct_grams = set(all_grams)
-
-	# count_dna = 0
-	# motifs_most = []
-	# print(len(temp_dna)/3)
-	# # 70% occurence
-	# for gram in distinct_grams:
-	# 	count_dna = 0
-	# 	str_gram = ''.join(gram)
-	# 	for dna_s in temp_dna:
-	# 		if str_gram in str(dna_s):
-	# 			count_dna += 1
-	# 			if count_dna > len(temp_dna)*7/10:
-	# 				motifs_most.append(str_gram)
-	# 				break
-	# 	if len(motifs_most) >= 500:
-	# 		break
-
-	# for gram in motifs_most:
-	# 	features.write(gram + '\n')
 
 	# in the end print the number of sequence and gram 
 	print(str(number) + ' sequences')
